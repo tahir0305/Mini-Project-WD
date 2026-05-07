@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>e-Granthalaya</title>
+    <style>
+        /* --- 1. CSS Variables and Base Light Theme (Deep Sapphire Blue Accent) --- */
+        :root {
+            /* Light Theme Core */
+            --color-bg-primary: #f5f7fa; /* Soft off-white for background */
+            --color-bg-secondary: #ffffff; /* Pure white for cards/elements */
+            
+            /* Accent Color: Deep Sapphire Blue */
+            --color-accent: #0056b3; 
+            --color-accent-hover: #004494;
+            
+            /* Typography and Borders */
+            --color-text-dark: #1a1a1a; 
+            --color-text-muted: #6b7280;
+            --shadow-soft: 0 6px 20px rgba(0, 0, 0, 0.08); /* Soft, lifted shadow */
+            --border-light: 1px solid #e0e0e0;
+            --transition-speed: 0.3s;
+            --spacing-unit: 8px; /* 8-point grid baseline */
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--color-bg-primary);
+            color: var(--color-text-dark);
+            line-height: 1.6;
+        }
+
+        /* Prevents background scrolling when modal is open */
+        .no-scroll {
+            overflow: hidden;
+        }
+
+        /* --- 2. Layout, Typography, and Hierarchy --- */
+        .container {
+            max-width: 1280px;
+            /* Generous vertical spacing based on 8-point grid */
+            margin: calc(7 * var(--spacing-unit)) auto; /* 56px margin top/bottom */
+            padding: 0 calc(3 * var(--spacing-unit)); /* 24px padding left/right */
+            transition: filter var(--transition-speed);
+        }
+
+        /* Blur effect applied only to the background container */
+        .is-blurred {
+            filter: blur(5px);
+            pointer-events: none;
+            user-select: none;
+        }
+        
+        /* New styles for the logo and title box */
+        .main-header {
+            text-align: center; /* Center the entire header block */
+            margin-bottom: calc(5 * var(--spacing-unit));
+        }
+
+        .title-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: calc(2 * var(--spacing-unit)); /* 16px gap between logo and H1 */
+            
+            /* Styles for the "separate box" with borders */
+            border: var(--border-light);
+            border-radius: 12px;
+            padding: calc(4 * var(--spacing-unit)) calc(5 * var(--spacing-unit)); /* Generous symmetric padding */
+            margin: 0 auto;
+            max-width: 650px; /* Constrain the box width */
+            background: var(--color-bg-secondary);
+            box-shadow: var(--shadow-soft);
+            transition: all var(--transition-speed) ease; /* Liquid glass transition */
+        }
+
+        /* Hover effect for Liquid Glass aesthetic */
+        .title-box:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 86, 179, 0.15); /* Stronger accent shadow */
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(0, 86, 179, 0.2);
+        }
+        
+        /* New class for the image container - BORDER REMOVED */
+        .logo-icon {
+            width: 72px; 
+            height: 72px;
+            flex-shrink: 0; 
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* Border and padding removed for minimalist aesthetic */
+        }
+
+        h1 {
+            color: var(--color-accent); /* Deep Sapphire Blue */
+            font-size: 2.25rem; /* Large text */
+            font-weight: 700; /* Lowered boldness slightly */
+            margin: 0;
+            transition: all var(--transition-speed) ease;
+            /* Borders removed for minimalist aesthetic */
+        }
+        
+        /* Subtle lift on title text when hovering parent box */
+        .title-box:hover h1 {
+            transform: scale(1.02);
+        }
+
+        .quote-container {
+            margin: calc(4 * var(--spacing-unit)) auto calc(8 * var(--spacing-unit));
+            max-width: 80%;
+        }
+
+        .quote-text {
+            /* FIX: Reverting to single P tag structure for stability */
+            text-align: left; /* Keep quote text left-aligned */
+            font-size: 1.1rem;
+            color: var(--color-text-muted);
+            font-style: italic;
+            border-left: 4px solid var(--color-accent); /* Accent border on the left */
+            padding-left: calc(3 * var(--spacing-unit));
+            margin: 0 auto;
+            max-width: 600px;
+        }
+        
+        .quote-source {
+            display: block;
+            text-align: center; /* Center source alignment */
+            font-size: 1rem;
+            color: var(--color-text-dark);
+            margin-top: calc(2 * var(--spacing-unit));
+        }
+
+        /* --- 3. Search and Controls --- */
+        .controls {
+            display: flex;
+            flex-direction: column;
+            gap: calc(3 * var(--spacing-unit)); /* 24px gap */
+            padding: calc(4 * var(--spacing-unit)); /* 32px padding */
+            border-radius: 12px;
+            background-color: var(--color-bg-secondary);
+            box-shadow: var(--shadow-soft);
+            max-width: 800px;
+            margin: 0 auto calc(6 * var(--spacing-unit));
+            transition: all var(--transition-speed) ease;
+        }
+        
+        /* Liquid glass hover for controls */
+        .controls:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 86, 179, 0.15);
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(4px);
+        }
+
+        .search-box {
+            display: flex;
+            gap: calc(2 * var(--spacing-unit));
+            align-items: center;
+        }
+
+        input[type="text"] {
+            flex-grow: 1;
+            padding: calc(2 * var(--spacing-unit)) calc(3 * var(--spacing-unit)); /* 16px vertical, 24px horizontal */
+            border: var(--border-light);
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color var(--transition-speed);
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--color-accent);
+            box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.2);
+        }
+
+        .search-button {
+            padding: calc(2 * var(--spacing-unit)) calc(3 * var(--spacing-unit));
+            background-color: var(--color-accent);
+            color: var(--color-bg-secondary);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: background-color var(--transition-speed), transform var(--transition-speed);
+        }
+
+        .search-button:hover {
+            background-color: var(--color-accent-hover);
+            transform: translateY(-1px);
+        }
+        
+        /* --- 4. Book List Grid and Cards --- */
+        .book-grid-wrapper {
+            display: flex;
+            justify-content: center; /* Center the grid block */
+        }
+
+        #bookList {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: calc(4 * var(--spacing-unit)); /* 32px gap between cards */
+            max-width: 100%; /* Ensures grid adheres to wrapper width */
+        }
+        
+        .book-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background-color: var(--color-bg-secondary);
+            border-radius: 12px;
+            box-shadow: var(--shadow-soft);
+            overflow: hidden;
+            transition: all var(--transition-speed) ease;
+        }
+
+        /* Hover effect for Liquid Glass aesthetic on cards */
+        .book-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.12);
+            border: 1px solid rgba(0, 86, 179, 0.2);
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .card-content {
+            padding: calc(4 * var(--spacing-unit)) calc(3 * var(--spacing-unit)) 0; /* Symmetric top/sides padding, zero bottom for flush button */
+        }
+
+        h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-top: 0;
+            margin-bottom: calc(2 * var(--spacing-unit));
+            color: var(--color-text-dark);
+        }
+
+        .book-type {
+            font-size: 0.9rem;
+            color: var(--color-text-muted);
+            margin-bottom: calc(4 * var(--spacing-unit));
+            display: block;
+        }
+
+        .view-doc-btn {
+            /* Button needs to expand to edges and blend with bottom corners */
+            display: flex; 
+            justify-content: center; /* Center text using Flexbox */
+            align-items: center;
+
+            padding: calc(3 * var(--spacing-unit)) 0; /* 24px vertical padding */
+            background-color: var(--color-accent);
+            color: var(--color-bg-secondary);
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+            
+            /* Blending corners to match card */
+            border-radius: 0 0 12px 12px;
+            
+            /* Expansion to meet card edges */
+            margin: calc(4 * var(--spacing-unit)) calc(-3 * var(--spacing-unit)) 0;
+            width: calc(100% + 6 * var(--spacing-unit)); /* Card width (100%) + 2x padding (3*8*2 = 48px) */
+            
+            transition: background-color var(--transition-speed);
+        }
+
+        .view-doc-btn:hover {
+            background-color: var(--color-accent-hover);
+        }
+        
+        /* --- 5. Modal Styling (Document Viewer) --- */
+        #documentModal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7); /* Dark semi-transparent overlay */
+            display: none; /* Initially hidden */
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: var(--color-bg-secondary);
+            border-radius: 12px;
+            width: 95%;
+            height: 95%;
+            max-width: 1200px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between; /* Space out title and close button */
+            align-items: center;
+            padding: calc(2 * var(--spacing-unit));
+            border-bottom: var(--border-light);
+        }
+        
+        /* New style for the modal title */
+        .modal-header h3 {
+            margin: 0;
+            font-size: 1.25rem;
+            color: var(--color-text-dark);
+        }
+
+        .close-button {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--color-text-dark);
+            transition: color var(--transition-speed);
+        }
+
+        .close-button:hover {
+            color: var(--color-accent);
+        }
+
+        #documentFrame {
+            flex-grow: 1;
+            border: none;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* --- 6. Responsive Adjustments --- */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 calc(2 * var(--spacing-unit)); /* Reduced padding on mobile */
+            }
+            .title-box {
+                flex-direction: column;
+                padding: calc(3 * var(--spacing-unit));
+            }
+            h1 {
+                font-size: 1.75rem;
+            }
+            .quote-container {
+                max-width: 95%;
+            }
+            .quote-text {
+                max-width: none;
+            }
+            #bookList {
+                grid-template-columns: 1fr; /* Single column on small screens */
+            }
+            .view-doc-btn {
+                /* Adjust for single-column card padding changes */
+                margin: calc(4 * var(--spacing-unit)) calc(-3 * var(--spacing-unit)) 0;
+                width: calc(100% + 6 * var(--spacing-unit));
+            }
+        }
+
+        /* --- 7. Search Results Display --- */
+        #noResults {
+            text-align: center;
+            color: var(--color-text-muted);
+            font-size: 1.1rem;
+            padding: calc(8 * var(--spacing-unit));
+            margin-top: calc(4 * var(--spacing-unit));
+            display: none;
+        }
+    </style>
+</head>
+<body id="pageBody">
+
+    <header class="main-header">
+        <div class="title-box">
+            <!-- Logo: Simple Stacked Books (Stable SVG) -->
+            <div class="logo-icon">
+                <!-- VSC LINTER IGNORE START -->
+                <svg width="64" height="64" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Adjusted for FINAL perfect centering -->
+                    <g transform="translate(14.75, 10)">
+                        <!-- Top Book (Red/Purple) -->
+                        <rect x="20" y="5" width="60" height="20" rx="3" fill="#E74C3C"/>
+                        <rect x="20" y="5" width="5" height="20" fill="#C0392B"/> 
+                        <!-- Spine line -->
+                        <rect x="75" y="5" width="5" height="20" fill="#C0392B"/>
+                        
+                        <!-- Middle Book (Orange/Yellow) -->
+                        <rect x="15" y="30" width="70" height="25" rx="3" fill="#F39C12"/>
+                        <rect x="15" y="30" width="5" height="25" fill="#D35400"/>
+                        <rect x="80" y="30" width="5" height="25" fill="#D35400"/>
+                        
+                        <!-- Bottom Book (Green/Teal) -->
+                        <rect x="10" y="60" width="80" height="25" rx="3" fill="#2ECC71"/>
+                        <rect x="10" y="60" width="5" height="25" fill="#27AE60"/>
+                        <rect x="85" y="60" width="5" height="25" fill="#27AE60"/>
+                    </g>
+                </svg>
+                <!-- VSC LINTER IGNORE END -->
+            </div>
+            <h1>e-Granthalaya</h1>
+        </div>
+        <div class="quote-container">
+            <p class="quote-text">“The only thing you absolutely have to know is the location of the library.”</p>
+            <span class="quote-source">– Albert Einstein</span>
+        </div>
+    </header>
+
+    <div id="mainContainer" class="container">
+        
+        <!-- Search and Controls Block -->
+        <div class="controls">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search by title..." aria-label="Search Book Catalog">
+                <button class="search-button" onclick="filterBooks()">Search</button>
+            </div>
+            <p style="font-size: 0.9rem; color: var(--color-text-muted); text-align: center; margin: 0;">Static Educational Resources: Maharashtra SSC & Entrance Prep Guides</p>
+        </div>
+
+        <!-- Book List Grid -->
+        <div class="book-grid-wrapper">
+            <div id="bookList">
+                <!-- Book Cards will be rendered here by JavaScript -->
+            </div>
+            <div id="noResults" style="display: none;">No books match your search criteria.</div>
+        </div>
+    </div>
+
+    <!-- Modal for Document Viewing -->
+    <div id="documentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3></h3> 
+                <button class="close-button" onclick="closeModal()" aria-label="Close Document Viewer">&times;</button>
+            </div>
+            <iframe id="documentFrame"></iframe>
+        </div>
+    </div>
+
+    <script>
+        // Data for the catalog (No authors, as requested)
+        const library = [
+            { id: 1, title: "Maharashtra SSC Science & Technology Textbook (Grade 9)", pdfUrl: "https://drive.google.com/file/d/1RId1dd5-vPax82j4uNSHkbG0kPCY2TFY/preview" },
+            { id: 2, title: "Maharashtra SSC Social Science Textbook (Grade 9)", pdfUrl: "https://drive.google.com/file/d/1GXJ-HJ4-FEWSlNPg0iG3qZQM4NureHtS/preview" },
+            { id: 3, title: "JEE Main Solved Papers 2024", pdfUrl: "https://docs.google.com/viewer?url=https://www.oswaalbooks.com/download/jee-main-solved-papers-2024.pdf&embedded=true" },
+            { id: 4, title: "MHTCET Guide to Physics & Chemistry", pdfUrl: "https://docs.google.com/viewer?url=https://www.targetpublications.org/MHT-CET-Physics-Chemistry-Solutions.pdf&embedded=true" },
+            { id: 5, title: "Maharashtra SSC Science Textbook Part 1 (Grade 10)", pdfUrl: "https://drive.google.com/file/d/1EhbhxXrJGJ-sCa1uhKKTBSsGCb3FHNKe/preview" },
+            { id: 6, title: "Maharashtra SSC Science Textbook Part 2 (Grade 10)", pdfUrl: "https://drive.google.com/file/d/10jVE0Pc8In2HjxaethAIW425leC1C91m/preview" },
+            { id: 7, title: "Maharashtra SSC Mathematics Textbook Part 1 (Grade 10)", pdfUrl: "https://drive.google.com/file/d/1CPJ4NNsKXheiw4wLTWzEHBqxROheN3g2/preview" },
+            { id: 8, title: "Maharashtra SSC Mathematics Textbook Part 2 (Grade 10)", pdfUrl: "https://drive.google.com/file/d/1wW5j9FkC0mu5j2ffkujltrWpvDUTsIVA/preview" },
+            { id: 9, title: "Maharashtra SSC Geography Textbook (Grade 10)", pdfUrl: "https://drive.google.com/file/d/1nNjpA3L2ATYe8DRW1Ko5iNLNMSReYTdx/preview" },
+            { id: 11, title: "Maharashtra SSC English Textbook (Grade 10)", pdfUrl: "https://drive.google.com/file/d/1H1RUlGcOlMG-e7hZyAoGwtRejCfppC12/preview" },
+            { id: 12, title: "Arihant JEE Main Physics 40 Days Crash Course", pdfUrl: "https://drive.google.com/file/d/1sI_2SWANx6J8h2S2O0NjtGyARDURUa3w/preview" },
+            { id: 13, title: "Disha JEE Mains Solved Papers Physics", pdfUrl: "https://drive.google.com/file/d/15vxvj9RGo6sPlU9HNqsdzMHAnjGfeR6M/preview" },
+            { id: 14, title: "Disha JEE Mains Solved Papers Mathematics", pdfUrl: "https://drive.google.com/file/d/1rNQSPCMqfCQ9QE3hotk7cUfb4QpXbjmZ/preview" },
+            { id: 15, title: "Arihant JEE Main Chemistry 40 Days Crash Course", pdfUrl: "https://drive.google.com/file/d/1snug_SjCfMaLxNIj0Pg_804TqNcNV2do/preview" },
+            { id: 16, title: "Arihant JEE Main Mathematics 40 Days Crash Course", pdfUrl: "https://drive.google.com/file/d/1qLErkQlVxelDWai2Lyn08Mu_-p0gs5eh/preview" },
+            { id: 17, title: "MHT-CET Previous Year Solved Papers + 10 Mock Tests", pdfUrl: "https://drive.google.com/file/d/1ieKqzyqcJs7Yd5WUnuRTUAzo3sOb2D9u/preview" },
+            { id: 18, title: "Disha 33 Years NEET Solved Papers-BIO", pdfUrl: "https://drive.google.com/file/d/1hSdv_1g9imr9okfz9nhUQeIbHloGeX6E/preview" },
+            { id: 19, title: "Maharashtra SSC History & Political Science Textbook (Grade 10)", pdfUrl: "https://drive.google.com/file/d/1PDFnelofVXnKtvcCSvP6-z45BY6TtoHa/preview" },
+            { id: 20, title: "Maharashtra SSC Mathematics Textbook Part 1 (Grade 9)", pdfUrl: "https://drive.google.com/file/d/14o84Crz470BVbSMXcEAJAxc3qaJAUhpC/preview" },
+            { id: 21, title: "Maharashtra SSC Mathematics Textbook Part 2 (Grade 9)", pdfUrl: "https://drive.google.com/file/d/1pwBPGVBPYlSMiECjHW7Aj4ftDzHz07vO/preview" },
+            { id: 23, title: "Maharashtra SSC English Textbook (Grade 9)", pdfUrl: "https://drive.google.com/file/d/1iHEEuJp51yGMN_MJdgT0AVaL4vjEiyFL/preview" },
+            { id: 24, title: "Maharashtra SSC Geography Textbook (Grade 9)", pdfUrl: "https://drive.google.com/file/d/1gcxKZXawHb8P-m7i518kEYM4HHhG-aMB/preview" }
+        ];
+
+        const bookListEl = document.getElementById('bookList');
+        const searchInputEl = document.getElementById('searchInput');
+        const noResultsEl = document.getElementById('noResults');
+        const modalEl = document.getElementById('documentModal');
+        const iframeEl = document.getElementById('documentFrame');
+        const pageBodyEl = document.getElementById('pageBody');
+        const mainContainerEl = document.getElementById('mainContainer');
+
+        // Function to render the book catalog
+        function renderBooks(books) {
+            bookListEl.innerHTML = '';
+            
+            if (books.length === 0) {
+                noResultsEl.style.display = 'block';
+                return;
+            }
+            noResultsEl.style.display = 'none';
+
+            books.forEach(book => {
+                const card = document.createElement('div');
+                card.className = 'book-card';
+                
+                // Determine the type for display
+                let type = "SSC Board Book";
+                if (book.title.includes("JEE") || book.title.includes("MHTCET") || book.title.includes("NEET") || book.title.includes("CRASH COURSE") || book.title.includes("Arihant") || book.title.includes("Disha") || book.title.includes("Solved Papers")) {
+                    type = "Entrance Exam Prep";
+                }
+
+                // Use the viewDocument function for the link
+                card.innerHTML = `
+                    <div class="card-content">
+                        <h3>${book.title}</h3>
+                        <span class="book-type">${type}</span>
+                    </div>
+                    <a href="#" class="view-doc-btn" onclick="openDocument('${book.pdfUrl}', '${book.title}'); return false;">View Document</a>
+                `;
+                bookListEl.appendChild(card);
+            });
+        }
+
+        // Search/Filter function
+        function filterBooks() {
+            const query = searchInputEl.value.toLowerCase().trim();
+            const filtered = library.filter(book => 
+                book.title.toLowerCase().includes(query)
+            );
+            renderBooks(filtered);
+        }
+
+        // Initialize display
+        renderBooks(library);
+
+        // Bind filter to Enter key in search box
+        searchInputEl.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                filterBooks();
+            }
+        });
+
+        // Modal Functions
+        function openDocument(url, title) {
+            // Updated to display title in the modal header
+            document.querySelector('#documentModal .modal-header h3').textContent = title; 
+            iframeEl.src = url;
+            modalEl.style.display = 'flex';
+            pageBodyEl.classList.add('no-scroll');
+            mainContainerEl.classList.add('is-blurred');
+        }
+
+        function closeModal() {
+            iframeEl.src = ''; // Clear iframe content
+            modalEl.style.display = 'none';
+            pageBodyEl.classList.remove('no-scroll');
+            mainContainerEl.classList.remove('is-blurred');
+        }
+    </script>
+</body>
+</html>
